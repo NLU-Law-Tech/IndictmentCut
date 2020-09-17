@@ -9,6 +9,7 @@ def find_roles(cj_doc, target_roles=['上訴人', '被告', '選任辯護人'], 
 
     last_role_flag = 'undefine'
     last_index = 1
+    no_dealwith_list = ['上訴人', '代表人', '選任辯護人']
     for index, cj_doc_row in enumerate(cj_doc_rows):
         cj_doc_row = re.sub(encode_reg_role_clean_chars, "", cj_doc_row)
         # 找到上列被告就可以結束了
@@ -32,8 +33,12 @@ def find_roles(cj_doc, target_roles=['上訴人', '被告', '選任辯護人'], 
                 break
             elif(last_role_flag != 'undefine'):
                 _role = last_role_flag
-                if cj_doc_row_keep_full_space.find('選任辯護人') != -1:
-                    last_role_flag = 'undefine'
+                for no_dealwith in no_dealwith_list:
+                    if cj_doc_row.find(no_dealwith) != -1:
+                        last_role_flag = 'undefine'
+                        break
+
+                if last_role_flag == 'undefine':
                     break
 
                 for target_name in target_name_list:

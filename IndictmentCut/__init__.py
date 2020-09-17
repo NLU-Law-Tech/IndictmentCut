@@ -6,7 +6,7 @@ def find_fact(Indictment_text, break_line="\r\n"):
     return fact
     
 
-def find_law(Indictment_text, break_line="\r\n"):
+def find_laws(Indictment_text, break_line="\r\n"):
     # 找附錄法條
     # appendix_laws_list = find_appendix_laws(Indictment_text, break_line)
     laws_list = extract_law(Indictment_text,break_line)

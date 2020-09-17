@@ -1,5 +1,5 @@
 import re
-
+from .find_roles import find_roles
 
 def find_fact(Indictment_text, break_line="\r\n"):
     fact = extract_fact(Indictment_text, break_line)

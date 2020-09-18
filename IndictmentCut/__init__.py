@@ -1,6 +1,7 @@
 import re
 from .find_roles import find_roles
 from .find_fact import find_fact
+from .find_fact import extract_fact
 from .find_evidence import find_evidence
 
 def find_laws(Indictment_text, break_line="\r\n"):

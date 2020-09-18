@@ -11,6 +11,10 @@ def match_name_and_law(Indictment,name_list,break_line='\r\n'):
     Evidence = find_evidence(Indictment, break_line)
     # 取出執掌法條
     focus_laws_list = get_all_laws_list()
+    # init object for each person
+    for name in name_list:
+        name_and_law[name] = []
+    # 以句點分割
     Evidence_list = Evidence.split("。")
     for Evidence_a_line in Evidence_list:
         for focus_law in focus_laws_list:

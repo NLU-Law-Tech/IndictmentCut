@@ -235,3 +235,4 @@ def clean_data(dirty_law, break_line):
     # 先去空白 再去\r\n
     clean_law = re.sub(break_line, "", re.sub(r"\s+", "", dirty_law))
     return clean_law
+

@@ -43,8 +43,6 @@ def get_all_laws_list():
                      '電子票證發行管理條例', '營業秘密法', '信用合作社法', '菸酒管理法',
                      '保險法', '證券投資信託及顧問法', '證券投資人及期貨交易人保護法', '刑法']
     return all_laws_list
-
-
 # 資料清洗
 def clean_data(dirty_law, break_line):
     # 先去空白 再去\r\n

@@ -2,14 +2,14 @@ import re
 from IndictmentCut.find_laws import find_laws
 from IndictmentCut.find_roles import find_roles
 from IndictmentCut.find_laws import get_all_laws_list
-from IndictmentCut.find_evidence import find_evidence
+from IndictmentCut.find_evidence import find_evidence_plus
 
 
 def match_name_and_law(Indictment, name_list, break_line='\r\n'):
     # 找出所犯法條(法條自己一行)
     laws_list = add_ROC(find_laws(Indictment, break_line))
     # 找出證據及所犯法條的段落
-    Evidence = clean_text(find_evidence(Indictment, break_line), break_line)
+    Evidence = clean_text(find_evidence_plus(Indictment, break_line), break_line)
     # 取出執掌法條
     focus_laws_list = get_all_laws_list()
     # init object for each person

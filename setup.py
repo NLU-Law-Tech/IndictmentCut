@@ -14,5 +14,10 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/NLU-Law-Tech/IndictmentCut",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'ckiptagger_interface @ git+https://github.com/p208p2002/ckiptagger_interface@master',
+        'ckiptagger @ git+https://github.com/p208p2002/ckiptagger@ckiptagger-tf2.1',
+        'gdown'
+    ],
     python_requires='>=3.5',
 )

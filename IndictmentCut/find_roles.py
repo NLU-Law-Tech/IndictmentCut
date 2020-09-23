@@ -1,4 +1,5 @@
 import re
+from ckiptagger_interface import ckiptagger
 
 def find_roles(cj_doc, target_roles=['上訴人', '被告', '選任辯護人'], break_line='\r\n', name_length_limit=5, search_rows_limit=100):
     cj_doc_rows = cj_doc.split(break_line)
@@ -57,11 +58,58 @@ def find_roles(cj_doc, target_roles=['上訴人', '被告', '選任辯護人'], 
 
     return people
 
+def find_roles_plus(cj_doc, ckip, target_roles=['上訴人', '被告', '選任辯護人'], break_line='\r\n', name_length_limit=5, search_rows_limit=100):
+    # 濾掉全半形空白
+    cj_doc = cj_doc.replace("　", "").replace(" ", "").replace(break_line, "")
+
+    # 只抓上列被告之前的部分
+    end = cj_doc.find('上列被告')
+    if end != -1:
+        cj_doc = cj_doc[:end]
+
+    # 限制長度
+    cj_doc = cj_doc[:1000]
+
+    # 提取所有人名
+    name_list = []
+    sentence = [cj_doc]
+    entity_list = ckip.parse(sentence)
+    for entity in entity_list:
+        for ent in entity:
+            (ws, pos, ner) = ent
+            if ner == 'PERSON':
+                name_list.append(ws)
+
+    # 提取被告
+    people = []
+    no_dealwith_list = ['上訴人', '代表人', '選任辯護人']
+    for role in target_roles:
+        if role in no_dealwith_list:
+            continue
+
+        for name in name_list:
+            name_T_F = True
+            start = cj_doc.find(name)
+            if start != -1:
+                name_start = cj_doc.rfind(role, 0, start)
+                # 判斷在出現被告之前是否有出現不處理的單詞
+                for no_dealwith in no_dealwith_list:
+                    if cj_doc.rfind(no_dealwith, 0, start) != -1:
+                        if cj_doc.rfind(no_dealwith, 0, start) > name_start:
+                            name_T_F = False
+                            break
+
+            if name_T_F:
+                people.append({"name": name, "role": role})
+
+    return people
+
 if __name__ == "__main__":
+    ckip = ckiptagger()
     with open('test.txt','r',encoding='utf-8') as f:
         text = f.read()
 
     people = []
-    people = find_roles(text, target_roles = ['被告'], break_line='\n')
+    people = find_roles_plus(text, ckip, target_roles = ['被告'], break_line='\n')
     for p in people:
         print(p)

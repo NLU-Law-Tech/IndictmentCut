@@ -1,5 +1,5 @@
 import re
-from ckiptagger_interface import ckiptagger
+# from ckiptagger_interface import ckiptagger
 
 def find_roles(cj_doc, target_roles=['上訴人', '被告', '選任辯護人'], break_line='\r\n', name_length_limit=5, search_rows_limit=100):
     cj_doc_rows = cj_doc.split(break_line)
@@ -103,6 +103,18 @@ def find_roles_plus(cj_doc, ckip, target_roles=['上訴人', '被告', '選任�
                 people.append({"name": name, "role": role})
 
     return people
+
+def find_defendants(SPSuspect):
+    """
+    從SPSuspect欄位找出找出被告
+    input : SPSuspect(String)
+    output: defendants_list(List)
+    """
+    SPSuspect_list = list(filter(None, re.split(r"\s", SPSuspect)))
+    print(SPSuspect_list)
+    defendant_list = [SPSuspect_list[i-1] for i in range(1, len(SPSuspect_list)) if SPSuspect_list[i] in ["男", "女"]]
+
+    return list(set(defendant_list))
 
 if __name__ == "__main__":
     ckip = ckiptagger()

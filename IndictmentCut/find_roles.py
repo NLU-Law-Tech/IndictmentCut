@@ -104,15 +104,36 @@ def find_roles_plus(cj_doc, ckip, target_roles=['上訴人', '被告', '選任�
 
     return people
 
+def _filter_unused_defendant(defendant):
+    """
+    設一些rule刪除明顯不是姓名的字
+    是姓名則返回True，反之則返回False
+    """
+    #被告姓名中有數字
+    if re.search(r'[0-9]', defendant):
+        return False
+
+    #被告姓名是全英文
+    if re.fullmatch(r'[a-zA-Z]+', defendant):
+        return True
+    #被告姓名長度介於2~5之間
+    elif 6>len(defendant)>1:
+        return True
+    else:
+        return False
+
 def find_defendants(SPSuspect):
     """
     從SPSuspect欄位找出找出被告
     input : SPSuspect(String)
     output: defendants_list(List)
     """
+    #把括號中的文字去除，避免"陳OO (本名陳XX) 男 30歲"的情況被告會抓到"(本名陳XX)"
+    SPSuspect = re.sub(u"\\(.*?\\)|\\（.*?）", "", SPSuspect)
     SPSuspect_list = list(filter(None, re.split(r"\s", SPSuspect)))
     print(SPSuspect_list)
     defendant_list = [SPSuspect_list[i-1] for i in range(1, len(SPSuspect_list)) if SPSuspect_list[i] in ["男", "女"]]
+    defendant_list = [defendant for defendant in defendant_list if _filter_unused_defendant(defendant)]
 
     return list(set(defendant_list))
 

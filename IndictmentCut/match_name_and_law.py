@@ -310,7 +310,7 @@ def find_fullname_law(text, all_law_positions):
         text, blacklaw_list)
     # init object
     law_article_para_subpara_positions_dict = {}
-    kind_list = ["law", "article", "paragraph", "subparagraph"]
+    kind_list = ["law", "article", "paragraph", "subparagraph", "blacklaw"]
     fullname_law_dict = {}
     for law_position in all_law_positions_list:
         fullname_law_dict[law_position] = []
@@ -324,6 +324,8 @@ def find_fullname_law(text, all_law_positions):
             law_article_para_subpara_positions_dict[kind] = all_paragraph_positions_list
         elif kind == "subparagraph":
             law_article_para_subpara_positions_dict[kind] = all_subparagraph_positions_list
+        elif kind == "blacklaw":
+            law_article_para_subpara_positions_dict[kind] = all_blacklaw_positions_list
     #
     law_article_para_subpara_positions_list = get_extend_list(
         all_law_positions_list, all_article_positions_list, all_paragraph_positions_list, all_subparagraph_positions_list, all_blacklaw_positions_list)
@@ -334,6 +336,8 @@ def find_fullname_law(text, all_law_positions):
     temp_paragraph_name_list = []
     temp_subparagraph_name_list = []
     fullname_law_list = []
+    # pass_flag 用來跳過blacklaw的條項款
+    pass_flag = False
     law_name=""
     law_name_position = 0
     for i, position in enumerate(law_article_para_subpara_positions_list):
@@ -344,15 +348,18 @@ def find_fullname_law(text, all_law_positions):
         if current_flag == "law":
            law_name = get_key(all_law_positions, position)
            law_name_position = position
-        elif current_flag == "article":
+           pass_flag = False
+        elif current_flag == "article" and pass_flag == False:
             temp_article_name_list.append(article_positions_dict[position])
             temp_article_name_list = list(set(temp_article_name_list))
-        elif current_flag == "paragraph":
+        elif current_flag == "paragraph" and pass_flag == False:
             temp_paragraph_name_list.append(paragraph_positions_dict[position])
-        elif current_flag == "subparagraph":
+        elif current_flag == "subparagraph" and pass_flag == False:
             temp_subparagraph_name_list.append(
                 subparagraph_positions_dict[position])
-
+        elif current_flag == "blacklaw":
+            pass_flag = True
+            continue
         if i+1 < len(law_article_para_subpara_positions_list):
             next_flag = get_key(
                 law_article_para_subpara_positions_dict, law_article_para_subpara_positions_list[i+1])

@@ -124,16 +124,16 @@ def _filter_unused_defendant(defendant):
 
 def find_defendants(SPSuspect):
     """
-    從SPSuspect欄位找出找出被告
+    從SPSuspect欄位找出找出被告及其身分證字號
     input : SPSuspect(String)
-    output: defendants_list(List)
+    output: defendants_list(List of Tuples)
     """
     #把括號中的文字去除，避免"陳OO (本名陳XX) 男 30歲"的情況被告會抓到"(本名陳XX)"
     SPSuspect = re.sub(u"\\(.*?\\)|\\（.*?）", "", SPSuspect)
     SPSuspect_list = list(filter(None, re.split(r"\s", SPSuspect)))
     print(SPSuspect_list)
     defendant_list = [SPSuspect_list[i-1] for i in range(1, len(SPSuspect_list)) if SPSuspect_list[i] in ["男", "女"]]
-    defendant_list = [defendant for defendant in defendant_list if _filter_unused_defendant(defendant)]
+    defendant_list = [(defendant, "") for defendant in defendant_list if _filter_unused_defendant(defendant)]
 
     return list(set(defendant_list))
 

@@ -132,8 +132,12 @@ def find_defendants(SPSuspect):
     SPSuspect = re.sub(u"\\(.*?\\)|\\（.*?）", "", SPSuspect)
     SPSuspect_list = list(filter(None, re.split(r"\s", SPSuspect)))
     print(SPSuspect_list)
+    gender_index = [i for i, x in enumerate(SPSuspect_list) if x in ["男", "女"]]
+    # for i in gender_index:
+    #     name = SPSuspect_list[i-1]
+    #     id_number = 
     defendant_list = [SPSuspect_list[i-1] for i in range(1, len(SPSuspect_list)) if SPSuspect_list[i] in ["男", "女"]]
-    defendant_list = [defendant for defendant in defendant_list if _filter_unused_defendant(defendant)]
+    defendant_list = [(defendant, "") for defendant in defendant_list if _filter_unused_defendant(defendant)]
 
     return list(set(defendant_list))
 

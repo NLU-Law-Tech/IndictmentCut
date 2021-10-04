@@ -129,9 +129,9 @@ def find_defendants(SPSuspect):
     output: defendants_list(List of Tuples)
     """
     #把括號中的文字去除，避免"陳OO (本名陳XX) 男 30歲"的情況被告會抓到"(本名陳XX)"
-    SPSuspect = re.sub(u"\\(.*?\\)|\\（.*?）", "", SPSuspect)
+    SPSuspect = re.sub(r"\(.*?\)|（.*?）", "", SPSuspect)
     SPSuspect_list = list(filter(None, re.split(r"\s", SPSuspect)))
-    print(SPSuspect_list)
+
     gender_index = [i for i, x in enumerate(SPSuspect_list) if x in ["男", "女"]]
     defendant_list = []
     for i, j in zip(gender_index, gender_index[1:]+[len(SPSuspect_list)]):
@@ -139,7 +139,8 @@ def find_defendants(SPSuspect):
         id_number = re.findall(r"[A-Z]{1}[0-9]{9}|[A-Z]{2}[0-9]{8}", " ".join(SPSuspect_list[i:j]))
         id_number = id_number[0] if id_number else ""
         defendant_list.append((name, id_number))
-        print(defendant_list)
+
+    defendant_list = [i for i in defendant_list if _filter_unused_defendant(i[0])]
 
     return list(set(defendant_list))
 

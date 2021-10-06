@@ -270,7 +270,7 @@ def strip_blank(dirty_str):
 
 def find_string_all_positions(text, string_list, string_dict):
     for string in string_list:
-        string_all_match_positions = re.finditer(string, text)
+        string_all_match_positions = re.finditer(re.escape(string), text)
         for string_match_position in string_all_match_positions:
             string_dict[string].append(string_match_position.start())
 
